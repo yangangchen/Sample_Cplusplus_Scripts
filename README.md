@@ -21,6 +21,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 To run the code, you need to install the C++ library **Eigen**:
 http://eigen.tuxfamily.org
 
+Then execute:
+```
+$ make
+$ ./myprogram
+```
+
 **Contents:**
 
 1. Test script on Eclipse IDE.
