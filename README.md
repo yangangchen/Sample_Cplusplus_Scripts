@@ -18,6 +18,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 **Here are my sample C++ scripts.**
 
+To run the code, you need to install the C++ library **Eigen**
+http://eigen.tuxfamily.org
+
 **Contents:**
 
 1. Test script on Eclipse IDE.
