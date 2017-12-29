@@ -1,4 +1,4 @@
-# Sample Python Scripts
+# Sample C++ Scripts
 
 Copyright (C) 2017  Yangang Chen
 
