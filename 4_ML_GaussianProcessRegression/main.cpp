@@ -47,10 +47,10 @@ Eigen::MatrixXd load_test_once (int test_file_num, std::string s="Data") {
     return X;
 }
 
-double cross_validation (double lambda) {
+double cross_validation (double kernel_sigma) {
     int total_file_num = 10;
     Eigen::VectorXd cv_errors(total_file_num);
-    Regressor M(2, lambda);  // int dim = X_train.cols();
+    Regressor M(2, 1, kernel_sigma);
 
     for (int test_file_num=1; test_file_num<=total_file_num; test_file_num++) {
         Eigen::MatrixXd X_train = load_train_once (total_file_num, test_file_num, "Data");
@@ -66,26 +66,27 @@ double cross_validation (double lambda) {
 }
 
 Eigen::VectorXd model_selection () {
-    Eigen::MatrixXd results_lambdas_errors(2, 51);
-    for (int k=0; k<=50; k++) {
-        double lambda = 0.02 * k;
-        results_lambdas_errors(0, k) = lambda;
-        results_lambdas_errors(1, k) = cross_validation(lambda);
+    Eigen::MatrixXd results_sigmas_errors(2, 10);
+    for (int k=0; k<10; k++) {
+        double kernel_sigma = 0.5 * (k + 1);
+        std::cout << kernel_sigma << std::endl;
+        results_sigmas_errors(0, k) = kernel_sigma;
+        results_sigmas_errors(1, k) = cross_validation(kernel_sigma);
     }
-    // std::cout << results_lambdas_errors << std::endl;
+    // std::cout << results_sigmas_errors << std::endl;
     Eigen::VectorXd::Index j;
-    results_lambdas_errors.row(1).minCoeff(&j);
-    Eigen::VectorXd optimal_lambda_error = results_lambdas_errors.col(j);
-    // std::cout << optimal_lambda_error << std::endl;
-    return optimal_lambda_error;
+    results_sigmas_errors.row(1).minCoeff(&j);
+    Eigen::VectorXd optimal_sigma_error = results_sigmas_errors.col(j);
+    // std::cout << optimal_sigma_error << std::endl;
+    return optimal_sigma_error;
 }
 
 int main () {
-    Eigen::VectorXd optimal_lambda_error = model_selection ();
+    Eigen::VectorXd optimal_sigma_error = model_selection ();
     std::ofstream myfile;
     myfile.open("results.txt");
-    myfile << "The optimal lambda is: " << optimal_lambda_error(0) << "\n"
-           << "The optimal error is: " << optimal_lambda_error(1) << "\n";
+    myfile << "The optimal kernel_sigma is: " << optimal_sigma_error(0) << "\n"
+           << "The optimal error is: " << optimal_sigma_error(1) << "\n";
     myfile.close();
     return 0;
 }

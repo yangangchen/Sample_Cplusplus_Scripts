@@ -50,7 +50,8 @@ Eigen::MatrixXd load_test_once (int test_file_num, std::string s="Data") {
 double cross_validation (double lambda) {
     int total_file_num = 10;
     Eigen::VectorXd cv_errors(total_file_num);
-    Regressor M(2, lambda);  // int dim = X_train.cols();
+    Regressor M(2, 4, lambda);
+    // Regressor M(3, 4, lambda);
 
     for (int test_file_num=1; test_file_num<=total_file_num; test_file_num++) {
         Eigen::MatrixXd X_train = load_train_once (total_file_num, test_file_num, "Data");

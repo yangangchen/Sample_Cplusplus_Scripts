@@ -1,0 +1,2 @@
+The optimal lambda is: 0
+The optimal error is: 0.0202373

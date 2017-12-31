@@ -1,0 +1,2 @@
+The optimal kernel_sigma is: 4
+The optimal error is: 0.0285744

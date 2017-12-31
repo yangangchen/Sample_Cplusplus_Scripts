@@ -32,3 +32,9 @@ $ ./myprogram
 1. Test script on Eclipse IDE.
 
 2. Machine learning: Linear regression with the selection of regularization parameter lambda.
+
+3. Machine learning: Generalized linear regression with the selection of regularization parameter lambda.
+
+4. Machine learning: Gaussian process regression with the selection of kernel parameter sigma.
+
+5. Machine learning: Combining the major nonliner regressors (generalized linear regression and Gaussian process regression) into a single class of inheritance.

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <memory>
 #include <Eigen/Eigen/Dense>
 #include "regressor.h"
 
@@ -47,10 +48,9 @@ Eigen::MatrixXd load_test_once (int test_file_num, std::string s="Data") {
     return X;
 }
 
-double cross_validation (double lambda) {
+double cross_validation (Regressor* M) {
     int total_file_num = 10;
     Eigen::VectorXd cv_errors(total_file_num);
-    Regressor M(2, lambda);  // int dim = X_train.cols();
 
     for (int test_file_num=1; test_file_num<=total_file_num; test_file_num++) {
         Eigen::MatrixXd X_train = load_train_once (total_file_num, test_file_num, "Data");
@@ -58,34 +58,22 @@ double cross_validation (double lambda) {
         Eigen::MatrixXd X_test = load_test_once (test_file_num, "Data");
         Eigen::MatrixXd y_test = load_test_once (test_file_num, "Labels");
 
-        M.train(X_train, y_train);
-        // std::cout << "The coefficient matrix is: \n" << M.get_param() << std::endl;
-        cv_errors(test_file_num - 1) = M.evaluate_error(X_test, y_test);
+        M -> train(X_train, y_train);
+        cv_errors(test_file_num - 1) = M -> evaluate_error(X_test, y_test);
     }
     return cv_errors.mean();
 }
 
-Eigen::VectorXd model_selection () {
-    Eigen::MatrixXd results_lambdas_errors(2, 51);
-    for (int k=0; k<=50; k++) {
-        double lambda = 0.02 * k;
-        results_lambdas_errors(0, k) = lambda;
-        results_lambdas_errors(1, k) = cross_validation(lambda);
-    }
-    // std::cout << results_lambdas_errors << std::endl;
-    Eigen::VectorXd::Index j;
-    results_lambdas_errors.row(1).minCoeff(&j);
-    Eigen::VectorXd optimal_lambda_error = results_lambdas_errors.col(j);
-    // std::cout << optimal_lambda_error << std::endl;
-    return optimal_lambda_error;
-}
-
 int main () {
-    Eigen::VectorXd optimal_lambda_error = model_selection ();
+    GeneralizedLinearRegressor M1(2, 3, 0.58);
+    GaussianProcessRegressor M2(2, 1, 4.0, 1.0);
+    double error0 = cross_validation(&M1);
+    double error1 = cross_validation(&M2);
+
     std::ofstream myfile;
     myfile.open("results.txt");
-    myfile << "The optimal lambda is: " << optimal_lambda_error(0) << "\n"
-           << "The optimal error is: " << optimal_lambda_error(1) << "\n";
+    myfile << "The error for Generalized Linear Regressor is: " << error0 << "\n"
+           << "The error for Gaussian Process Regressor is: " << error1 << "\n";
     myfile.close();
     return 0;
 }

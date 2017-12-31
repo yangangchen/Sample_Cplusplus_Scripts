@@ -1,16 +1,16 @@
-#ifndef _MODEL_H_
-#define _MODEL_H_
+#ifndef _REGRESSOR_H_
+#define _REGRESSOR_H_
 
 #include <Eigen/Eigen/Dense>
 
-class Model
+class Regressor
 {
   private:
 
     // Declaration
-    Eigen::MatrixXd W;
     const int dim;
     const double lambda;
+    Eigen::MatrixXd W;
 
     // Private member functions
     void enlarge_data(Eigen::MatrixXd & X);
@@ -18,12 +18,12 @@ class Model
   public:
 
     // Constructor
-    explicit Model (const int dim, const double lambda=0.0);
+    explicit Regressor (const int dim, const double lambda=0.0);
 
     // Public member functions
     Eigen::MatrixXd get_param ();
     void train (Eigen::MatrixXd & X, Eigen::MatrixXd & y);
-    Eigen::MatrixXd prediction (Eigen::MatrixXd & X);
+    Eigen::MatrixXd predict (Eigen::MatrixXd & X);
     double evaluate_error (Eigen::MatrixXd & X, Eigen::MatrixXd & y);
 };
 

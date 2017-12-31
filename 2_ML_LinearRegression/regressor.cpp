@@ -1,35 +1,35 @@
 #include <Eigen/Eigen/Dense>
 #include <iostream>
-#include "model.h"
+#include "regressor.h"
 
-void Model::enlarge_data (Eigen::MatrixXd & X) {
+void Regressor::enlarge_data (Eigen::MatrixXd & X) {
     if (X.cols() == dim) {
         X.conservativeResize(Eigen::NoChange, dim + 1);
         X.col(dim).setOnes();
     }
 }
 
-Model::Model (const int dim, const double lambda):
-    W{Eigen::MatrixXd(dim + 1, 1)}, dim{dim}, lambda{lambda} {
+Regressor::Regressor (const int dim, const double lambda):
+    dim{dim}, lambda{lambda}, W{Eigen::MatrixXd::Zero(dim + 1, 1)} {
     // std::cout << "The initial coefficient matrix is: \n" << W << std::endl;
 }
 
-Eigen::MatrixXd Model::get_param () {
+Eigen::MatrixXd Regressor::get_param () {
     return W;
 }
 
-void Model::train (Eigen::MatrixXd & X, Eigen::MatrixXd & y) {
+void Regressor::train (Eigen::MatrixXd & X, Eigen::MatrixXd & y) {
     enlarge_data (X);
     Eigen::MatrixXd A = X.transpose() * X + lambda * Eigen::MatrixXd::Identity(dim + 1, dim + 1);
     Eigen::MatrixXd b = X.transpose() * y;
     W = A.partialPivLu().solve(b);
 }
 
-Eigen::MatrixXd Model::prediction (Eigen::MatrixXd & X) {
+Eigen::MatrixXd Regressor::predict (Eigen::MatrixXd & X) {
     enlarge_data (X);
     return X * W;
 }
 
-double Model::evaluate_error (Eigen::MatrixXd & X, Eigen::MatrixXd & y) {
-    return 0.5 * (prediction (X) - y).array().square().mean();
+double Regressor::evaluate_error (Eigen::MatrixXd & X, Eigen::MatrixXd & y) {
+    return 0.5 * (predict (X) - y).array().square().mean();
 }
