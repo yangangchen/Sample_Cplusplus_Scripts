@@ -67,13 +67,13 @@ double cross_validation (Regressor* M) {
 int main () {
     GeneralizedLinearRegressor M1(2, 3, 0.58);
     GaussianProcessRegressor M2(2, 1, 4.0, 1.0);
-    double error0 = cross_validation(&M1);
-    double error1 = cross_validation(&M2);
+    double error1 = cross_validation(&M1);
+    double error2 = cross_validation(&M2);
 
     std::ofstream myfile;
     myfile.open("results.txt");
-    myfile << "The error for Generalized Linear Regressor is: " << error0 << "\n"
-           << "The error for Gaussian Process Regressor is: " << error1 << "\n";
+    myfile << "The error for Generalized Linear Regressor is: " << error1 << "\n"
+           << "The error for Gaussian Process Regressor is: " << error2 << "\n";
     myfile.close();
     return 0;
 }
