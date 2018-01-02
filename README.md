@@ -37,10 +37,6 @@ $ ./myprogram
 
 4. Machine learning: Gaussian process regression with the selection of kernel parameter sigma.
 
-5. Machine learning: Combining the major nonliner regressors (generalized linear regression and Gaussian process regression) into a single class of inheritance.
+5. Machine learning: Combining the major nonliner regressors (generalized linear regression and Gaussian process regression) into a single class of inheritance. Added features include inheritance, polymorphism in main.cpp (main, cross_validation), etc.
 
-Added features include inheritance, polymorphism in main.cpp (main, cross_validation), etc.
-
-6. Machine learning: Combining the major nonliner regressors (generalized linear regression and Gaussian process regression) into a single class of inheritance.
-
-Added features include the rule of five (copy constructor, copy assignment operator, move constructor, move assignment operator, destructor), dynamic memory allocation, etc.
+6. Machine learning: Combining the major nonliner regressors (generalized linear regression and Gaussian process regression) into a single class of inheritance. Added features include the rule of five (copy constructor, copy assignment operator, move constructor, move assignment operator, destructor), dynamic memory allocation, etc.
