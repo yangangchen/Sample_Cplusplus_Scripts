@@ -3,13 +3,58 @@
 #include <algorithm>
 #include "regressor.h"
 
-// class Regressor
-Regressor::Regressor (const int dim):
+/*
+                   class Regressor
+*/
+Regressor::Regressor (int dim):
     dim{dim} {
 }
 
-// class GeneralizedLinearRegressor: public Regressor
-int GeneralizedLinearRegressor::transform_dim (const int input_dim, const int input_degree) const {
+Regressor::~Regressor () {
+}
+
+Regressor::Regressor (const Regressor & other):
+    dim{other.dim} {
+}
+
+// Copy-and-swap-idiom
+void Regressor::swap(Regressor & temp)
+{
+    using std::swap;
+    swap(dim, temp.dim);
+}
+
+// Cannot use copy-and-swap-idiom on the abstract class!
+/*
+Regressor & Regressor::operator = (const Regressor & other)
+{
+    Regressor temp = other;
+    swap(temp);
+    return *this;
+}
+*/
+
+Regressor & Regressor::operator = (const Regressor & other)
+{
+    dim = other.dim;
+    return *this;
+}
+
+Regressor::Regressor (Regressor && other):
+    dim{std::move(other.dim)} {
+}
+
+Regressor & Regressor::operator = (Regressor && other)
+{
+    using std::swap;
+    swap(dim, other.dim);
+    return *this;
+}
+
+/*
+             class GeneralizedLinearRegressor: public Regressor
+*/
+int GeneralizedLinearRegressor::transform_dim (int input_dim, int input_degree) const {
     int output_dim = 1;
     for (int s=std::max(input_dim,input_degree)+1; s<=input_dim+input_degree; s++) {
         output_dim *= s;
@@ -20,8 +65,8 @@ int GeneralizedLinearRegressor::transform_dim (const int input_dim, const int in
     return output_dim;
 }
 
-Eigen::MatrixXi GeneralizedLinearRegressor::build_expn_table_partial (const int input_dim,
-                                                                      const int expn_sum) const {
+Eigen::MatrixXi GeneralizedLinearRegressor::build_expn_table_partial (int input_dim,
+                                                                      int expn_sum) const {
     if (expn_sum == 0) {
         return Eigen::MatrixXi::Zero(input_dim, 1);
     }
@@ -60,7 +105,7 @@ Eigen::MatrixXi GeneralizedLinearRegressor::build_expn_table_full () const {
 }
 
 Eigen::VectorXd GeneralizedLinearRegressor::transform_data_onecol (const Eigen::MatrixXd & X,
-                                                                   const Eigen::VectorXi expn_onecol) const {
+                                                                   const Eigen::VectorXi & expn_onecol) const {
     Eigen::VectorXd transformed_X_onecol = Eigen::VectorXd::Ones(X.rows());
     for (int c=0; c<dim; c++) {
         Eigen::ArrayXd z = X.col(c).array().pow((double)expn_onecol(c));
@@ -80,10 +125,52 @@ Eigen::MatrixXd GeneralizedLinearRegressor::transform_data (const Eigen::MatrixX
     return transformed_X;
 }
 
-GeneralizedLinearRegressor::GeneralizedLinearRegressor (const int dim, const int degree, const double lambda):
+GeneralizedLinearRegressor::GeneralizedLinearRegressor (int dim, int degree, double lambda):
     Regressor{dim}, degree{degree},
     tf_dim{transform_dim(dim, degree)}, lambda{lambda},
     W{Eigen::MatrixXd::Zero(tf_dim, 1)} {
+}
+
+GeneralizedLinearRegressor::~GeneralizedLinearRegressor () {
+}
+
+GeneralizedLinearRegressor::GeneralizedLinearRegressor (const GeneralizedLinearRegressor & other):
+    Regressor{other}, degree{other.degree},
+    tf_dim{other.tf_dim}, lambda{other.lambda}, W{other.W} {
+}
+
+// Copy-and-swap-idiom
+void GeneralizedLinearRegressor::swap(GeneralizedLinearRegressor & temp)
+{
+    using std::swap;
+    Regressor::swap(temp);
+    swap(degree, temp.degree);
+    swap(tf_dim, temp.tf_dim);
+    swap(lambda, temp.lambda);
+    swap(W, temp.W);
+}
+
+GeneralizedLinearRegressor & GeneralizedLinearRegressor::operator = (const GeneralizedLinearRegressor & other)
+{
+    GeneralizedLinearRegressor temp = other;
+    swap(temp);
+    return *this;
+}
+
+GeneralizedLinearRegressor::GeneralizedLinearRegressor (GeneralizedLinearRegressor && other):
+    Regressor{std::move(other)}, degree{std::move(other.degree)},
+    tf_dim{std::move(other.tf_dim)}, lambda{std::move(other.lambda)}, W{std::move(other.W)} {
+}
+
+GeneralizedLinearRegressor & GeneralizedLinearRegressor::operator = (GeneralizedLinearRegressor && other)
+{
+    using std::swap;
+    Regressor::swap(other);
+    swap(degree, other.degree);
+    swap(tf_dim, other.tf_dim);
+    swap(lambda, other.lambda);
+    swap(W, other.W);
+    return *this;
 }
 
 Eigen::MatrixXd GeneralizedLinearRegressor::get_param () const {
@@ -106,7 +193,9 @@ double GeneralizedLinearRegressor::evaluate_error (const Eigen::MatrixXd & X, co
     return 0.5 * (predict (X) - y).array().square().mean();
 }
 
-// class GaussianProcessRegressor: public Regressor
+/*
+             class GaussianProcessRegressor: public Regressor
+*/
 Eigen::MatrixXd GaussianProcessRegressor::kernel_matrix (const Eigen::MatrixXd & X1,
                                                          const Eigen::MatrixXd & X2) const {
     int n1 = X1.rows();
@@ -120,23 +209,82 @@ Eigen::MatrixXd GaussianProcessRegressor::kernel_matrix (const Eigen::MatrixXd &
     return K;
 }
 
-GaussianProcessRegressor::GaussianProcessRegressor (const int dim, const int N,
-                                                    const double kernel_sigma, const double likelihood_sigma):
+GaussianProcessRegressor::GaussianProcessRegressor (int dim, int N,
+                                                    double kernel_sigma, double likelihood_sigma):
     Regressor{dim}, N{N}, kernel_sigma{kernel_sigma}, likelihood_sigma{likelihood_sigma},
-    Data{Eigen::MatrixXd::Zero(N,dim)}, Vec{Eigen::MatrixXd::Zero(N,1)} {
+    Data{nullptr}, Vec{nullptr} {
+}
+
+GaussianProcessRegressor::~GaussianProcessRegressor () {
+    delete Data;
+    delete Vec;
+}
+
+GaussianProcessRegressor::GaussianProcessRegressor (const GaussianProcessRegressor & other):
+    Regressor{other}, N{other.N}, kernel_sigma{other.kernel_sigma}, likelihood_sigma{other.likelihood_sigma},
+    Data{other.Data ? new Eigen::MatrixXd{*other.Data} : nullptr},
+    Vec{other.Vec ? new Eigen::MatrixXd{*other.Vec} : nullptr} {
+}
+
+// Copy-and-swap-idiom
+void GaussianProcessRegressor::swap(GaussianProcessRegressor & temp)
+{
+    using std::swap;
+    Regressor::swap(temp);
+    swap(N, temp.N);
+    swap(kernel_sigma, temp.kernel_sigma);
+    swap(likelihood_sigma, temp.likelihood_sigma);
+    swap(Data, temp.Data);
+    swap(Vec, temp.Vec);
+}
+
+GaussianProcessRegressor & GaussianProcessRegressor::operator = (const GaussianProcessRegressor & other)
+{
+    GaussianProcessRegressor temp = other;
+    swap(temp);
+    return *this;
+}
+
+GaussianProcessRegressor::GaussianProcessRegressor (GaussianProcessRegressor && other):
+    Regressor{std::move(other)}, N{std::move(other.N)}, kernel_sigma{std::move(other.kernel_sigma)},
+    likelihood_sigma{std::move(other.likelihood_sigma)},
+    Data{std::move(other.Data)}, Vec{std::move(other.Vec)} {
+}
+
+GaussianProcessRegressor & GaussianProcessRegressor::operator = (GaussianProcessRegressor && other)
+{
+    using std::swap;
+    Regressor::swap(other);
+    swap(N, other.N);
+    swap(kernel_sigma, other.kernel_sigma);
+    swap(likelihood_sigma, other.likelihood_sigma);
+    swap(Data, other.Data);
+    swap(Vec, other.Vec);
+    return *this;
 }
 
 void GaussianProcessRegressor::train (const Eigen::MatrixXd & X, const Eigen::MatrixXd & y) {
     N = X.rows();
-    Data = X;
-    Eigen::MatrixXd Mat = kernel_matrix (Data, Data) + likelihood_sigma * Eigen::MatrixXd::Identity(N, N);
-    Vec = Mat.partialPivLu().solve(y);
+    Data = new Eigen::MatrixXd{X};
+    Eigen::MatrixXd Mat = kernel_matrix (*Data, *Data) + likelihood_sigma * Eigen::MatrixXd::Identity(N, N);
+    Vec = new Eigen::MatrixXd{Mat.partialPivLu().solve(y)};
 }
 
 Eigen::MatrixXd GaussianProcessRegressor::predict (const Eigen::MatrixXd & X) const {
-    return kernel_matrix (X, Data) * Vec;
+    return kernel_matrix (X, *Data) * (*Vec);
 }
 
 double GaussianProcessRegressor::evaluate_error (const Eigen::MatrixXd & X, const Eigen::MatrixXd & y) const {
     return 0.5 * (predict (X) - y).array().square().mean();
 }
+
+/*
+// Test whether we can get a deep copy.
+void GaussianProcessRegressor::deepcopy_reset () {
+    *Vec = Eigen::MatrixXd::Zero(N, 1);
+}
+
+void GaussianProcessRegressor::deepcopy_get_param () {
+    std::cout << Vec->transpose() << "\n" << std::endl;
+}
+*/
