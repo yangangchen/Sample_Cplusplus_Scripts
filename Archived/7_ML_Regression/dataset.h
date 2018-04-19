@@ -37,6 +37,7 @@ class Dataset
     void train_test_split (const double percent);
     void Kfoldcv_split (const int K, const int k);
     double cross_validation (Regressor* model, const int K);
+    double train_test_evaluation (Regressor* model);
 };
 
 #endif
