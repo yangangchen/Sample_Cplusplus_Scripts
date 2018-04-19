@@ -71,7 +71,7 @@ class GaussianProcessRegressor: public Regressor
   public:
 
     // Constructor
-    explicit GaussianProcessRegressor (const int dim, const int N=1,
+    explicit GaussianProcessRegressor (const int dim,
              const double kernel_sigma=1.0, const double likelihood_sigma=1.0);
     // Public member functions
     void train (const Eigen::MatrixXd & X, const Eigen::MatrixXd & y) override;

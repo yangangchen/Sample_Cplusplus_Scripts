@@ -11,11 +11,11 @@
 #include <Eigen/Eigen/Dense>
 
 int main () {
-    Dataset<Eigen::MatrixXd> dataset("dataset/fData.csv", "dataset/fLabels.csv");
+    Dataset<Eigen::MatrixXd, Eigen::MatrixXd> dataset("Dataset/fData.csv", "Dataset/fLabels.csv");
     dataset.train_test_split(0.8);
 
-    PolynomialRegressor model1(2, 3, 0.58);
-    GaussianProcessRegressor model2(2, 1, 4.0, 1.0);
+    PolynomialRegressor model1(dataset.dim, 3, 0.58);  // (dataset.dim, degree, lambda)
+    GaussianProcessRegressor model2(dataset.dim, 4.0, 1.0);  // (dataset.dim, kernel_sigma, likelihood_sigma)
 
     int K = 10;
     double model1_cv_error = dataset.cross_validation(&model1, K);

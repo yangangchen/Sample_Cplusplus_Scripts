@@ -23,10 +23,10 @@ Eigen::MatrixXd GaussianProcessRegressor::kernel_matrix (const Eigen::MatrixXd &
 }
 
 // Constructor: GaussianProcessRegressor
-GaussianProcessRegressor::GaussianProcessRegressor (const int dim, const int N,
+// Data, Vec are constructed by the default constructor (empty matrices)
+GaussianProcessRegressor::GaussianProcessRegressor (const int dim,
                                                     const double kernel_sigma, const double likelihood_sigma):
-    Regressor{dim}, N{N}, kernel_sigma{kernel_sigma}, likelihood_sigma{likelihood_sigma},
-    Data{Eigen::MatrixXd::Zero(N,dim)}, Vec{Eigen::MatrixXd::Zero(N,1)} {
+    Regressor{dim}, N{0}, kernel_sigma{kernel_sigma}, likelihood_sigma{likelihood_sigma} {
 }
 
 // Public member function: train
