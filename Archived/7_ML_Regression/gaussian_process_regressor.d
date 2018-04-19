@@ -1,1 +1,0 @@
-gaussian_process_regressor.o: gaussian_process_regressor.cpp regressor.h
