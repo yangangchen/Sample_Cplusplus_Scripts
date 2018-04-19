@@ -18,15 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 **Author: Yangang Chen. My sample C++ scripts.**
 
-To run the code, you need to install the C++ library **Eigen**:
-http://eigen.tuxfamily.org
-
-Then execute:
-```
-$ make
-$ ./myprogram
-```
-
 **Contents:**
 
 1. Test script on Eclipse IDE.
@@ -42,3 +33,14 @@ $ ./myprogram
 6. Machine learning: Combining the major nonliner regressors (polynomial regression and Gaussian process regression) into a single class of inheritance. Only keep the necessary features, including inheritance, polymorphism in main.cpp (main, cross_validation), etc.
 
 7. Machine learning: Combining the major nonliner regressors (polynomial regression and Gaussian process regression) into a single class of inheritance. Introduce a class "Dataset" to handle the dataset and the k-fold cross validation.
+
+**Requirements:**
+
+To run the code, you need to install the C++ library **Eigen**:
+http://eigen.tuxfamily.org
+
+Then execute:
+```
+$ make
+$ ./myprogram
+```
