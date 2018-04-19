@@ -113,6 +113,13 @@ double Dataset<T>::cross_validation (Regressor* model, const int K) {
     return cv_errors.mean();
 }
 
+// Public member function: model_train_test
+template<typename T>
+double Dataset<T>::train_test_evaluation (Regressor* model) {
+    model -> train(X_train, y_train);
+    return model -> evaluate_error(X_Kfoldcv_cv, y_Kfoldcv_cv);
+}
+
 // Explicit instantiations
 // See https://stackoverflow.com/questions/495021/why-can-templates-only-be-implemented-in-the-header-file
 template class Dataset<Eigen::MatrixXd>;
