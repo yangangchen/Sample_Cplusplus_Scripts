@@ -1,2 +1,0 @@
-The error for Generalized Linear Regressor is: 0.0326419
-The error for Gaussian Process Regressor is: 0.0285744

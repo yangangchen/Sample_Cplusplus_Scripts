@@ -1,0 +1,2 @@
+The error for Polynomial Regressor is: 0.0326419 0.0326419 0.0326419
+The error for Gaussian Process Regressor is: 0.0285744 0.0285744 0.0285744

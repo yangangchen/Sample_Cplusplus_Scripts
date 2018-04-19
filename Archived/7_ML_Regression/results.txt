@@ -1,0 +1,2 @@
+The 10-fold cross-validation error for Polynomial Regressor is: 0.0245154
+The 10-fold cross-validation error for Gaussian Process Regressor is: 0.0362245
