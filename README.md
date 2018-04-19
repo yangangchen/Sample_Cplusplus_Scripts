@@ -29,4 +29,4 @@ $ ./myprogram
 
 **Contents:**
 
-1. Machine learning: Implementation of some important nonliner regressors (polynomial regressor and Gaussian process regressor), with k-fold cross validation.
+1. Machine learning: Implementation of some important nonlinear regressors (polynomial regressor and Gaussian process regressor), with k-fold cross validation.
