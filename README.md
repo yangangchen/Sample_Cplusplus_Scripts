@@ -34,6 +34,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 7_ML_Regression: Combining the major nonliner regressors (polynomial regression and Gaussian process regression) into a single class of inheritance. Introduce a class "Dataset" to handle the dataset and the k-fold cross validation.
 
+8_ML_Classification_TwoClasses: Implementation of logistic classifier (with polynomial basis) and Gaussian naive Bayes classifier, with k-fold cross validation.
+
 **Requirements:**
 
 To run the code, you need to install the C++ library **Eigen**:

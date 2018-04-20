@@ -1,0 +1,4 @@
+The 10-fold cross-validation accuracy for Logistic Classifier is: 86.3636%
+The test accuracy for Logistic Classifier is: 85.1351%
+The 10-fold cross-validation accuracy for Gaussian Naive Bayes Classifier is: 76.9981%
+The test accuracy for Gaussian Naive Bayes Classifier is: 72.973%
